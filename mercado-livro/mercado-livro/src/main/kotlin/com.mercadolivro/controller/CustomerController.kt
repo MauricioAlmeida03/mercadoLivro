@@ -2,8 +2,9 @@ package com.mercadolivro.controller
 
 import com.mercadolivro.controller.request.PostCustomerRequest
 import com.mercadolivro.controller.request.PutCustomerRequest
+import com.mercadolivro.controller.response.CustomerResponse
 import com.mercadolivro.extension.toCustomerModel
-import com.mercadolivro.model.CustomerModel
+import com.mercadolivro.extension.toResponse
 import com.mercadolivro.service.CustomerService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -24,8 +25,8 @@ class CustomerController (
 ) {
 
     @GetMapping
-    fun getAllCustomers(@RequestParam name: String?): List<CustomerModel>{
-        return customerService.getAllCustomers(name)
+    fun getAllCustomers(@RequestParam name: String?): List<CustomerResponse>{
+        return customerService.getAllCustomers(name).map { it.toResponse() }
     }
 
     @PostMapping
@@ -35,14 +36,15 @@ class CustomerController (
     }
 
     @GetMapping("{id}")
-    fun getCustomer(@PathVariable id:Int): CustomerModel{
-        return customerService.findById(id)
+    fun getCustomer(@PathVariable id:Int): CustomerResponse{
+        return customerService.findById(id).toResponse()
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@PathVariable id: Int, @RequestBody customerToUpdate: PutCustomerRequest){
-        customerService.update(customerToUpdate.toCustomerModel(id))
+        val customerSaved = customerService.findById(id)
+        customerService.update(customerToUpdate.toCustomerModel(customerSaved))
     }
 
     @DeleteMapping("{id}")
