@@ -5,4 +5,4 @@ spring:
    datasource:
     url: jdbc:mysql://localhost:3306/mercadoLivro?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC&useSSL=false
     username: root
-    password: Maumau2000.
+    password: Maumau2000.sptech
